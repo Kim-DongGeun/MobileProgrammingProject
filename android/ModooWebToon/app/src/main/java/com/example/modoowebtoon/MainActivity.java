@@ -36,6 +36,16 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
+        myDataset = new ArrayList<>();
+
+        myDataset.add(new MyData("img1", R.drawable.tower_of_god_3_36_1));
+        myDataset.add(new MyData("img2", R.drawable.tower_of_god_3_36_10));
+        myDataset.add(new MyData("img3", R.drawable.tower_of_god_3_36_11));
+        myDataset.add(new MyData("img4", R.drawable.tower_of_god_3_36_12));
+        myDataset.add(new MyData("img5", R.drawable.tower_of_god_3_36_13));
+        myDataset.add(new MyData("img6", R.drawable.tower_of_god_3_36_14));
+
+
         mAdapter = new MyAdapter(myDataset);
         mRecyclerView.setAdapter(mAdapter);
     }
