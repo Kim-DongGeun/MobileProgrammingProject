@@ -1,5 +1,6 @@
 package com.example.modoowebtoon;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public ImageView mImageView;
-        public TextView mTextView;
+        public TextView mTitleView;
+        public TextView mSemiTitleView;
+        public TextView mAuthorView;
 
         public ViewHolder(View view) {
             super(view);
-            mImageView = (ImageView)view.findViewById(R.id.image);
-            mTextView = (TextView)view.findViewById(R.id.textview);
+            mImageView = (ImageView)view.findViewById(R.id.thumb_image);
+            mTitleView = (TextView)view.findViewById(R.id.title_view);
+            mSemiTitleView = (TextView)view.findViewById(R.id.semi_title_view);
+            mAuthorView = (TextView)view.findViewById(R.id.author_view);
         }
     }
 
@@ -49,8 +54,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset.get(position).text);
-        holder.mImageView.setImageResource(mDataset.get(position).img);
+        holder.mTitleView.setText(mDataset.get(position).title);
+        holder.mSemiTitleView.setText(mDataset.get(position).semi_title);
+        holder.mAuthorView.setText(mDataset.get(position).author);
+        holder.mImageView.setImageBitmap(mDataset.get(position).image);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -61,10 +68,49 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 }
 // view에 저장될 데이터 목록
 class MyData{
-    public String text;
-    public int img;
-    public MyData(String text, int img){
-        this.text = text;
-        this.img = img;
+    String title;
+    String semi_title;
+    String author;
+    Bitmap image;
+
+    public MyData(String title, String semi_title, String author, Bitmap image) {
+        this.title = title;
+        this.semi_title = semi_title;
+        this.author = author;
+        this.image = image;
+    }
+
+    public MyData(){}
+
+    public String getSemi_title() {
+        return semi_title;
+    }
+
+    public void setSemi_title(String semi_title) {
+        this.semi_title = semi_title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

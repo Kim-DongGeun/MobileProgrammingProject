@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="10dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview"
         card:cardCornerRadius="3dp"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,37 +19,40 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textview"
+                    android:id="@+id/title_view"
                     android:gravity="center|left"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
                     android:text="title"/>
 
                 <TextView
-                    android:id="@+id/textview2"
+                    android:id="@+id/semi_title_view"
                     android:gravity="center|left"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
                     android:text="semi title"/>
                 <TextView
-                    android:id="@+id/textview3"
+                    android:id="@+id/author_view"
                     android:gravity="center|left"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
                     android:text="author"/>
-
-
             </LinearLayout>
 
             <ImageView
+                android:scaleType="fitXY"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
                 android:src="@drawable/ic_launcher_background"
-                android:id="@+id/image"/>
+                android:id="@+id/thumb_image"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

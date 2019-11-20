@@ -52,9 +52,12 @@ def getURL():
             soup = BeautifulSoup(html, 'html.parser')
 
             
-
+            recently_url = ""
             # 각 웹툰 최신화 URL
-            recently_url = 'https://comic.naver.com' + soup.select('td')[2].contents[1]['href']
+            for content in soup.select('td a'):
+                if content['href'].find('/webtoon') != -1:
+                    recently_url = 'https://comic.naver.com' + content['href']
+                    break
             recently_url = recently_url[:recently_url.rfind('&')]
             # 최신화가 몇화인지
             recnetly_num = (int)(recently_url[recently_url.rfind('=') + 1:])
@@ -62,7 +65,7 @@ def getURL():
             for index in range(recnetly_num, 1, -1):
                 target_url = recently_url[:recently_url.rfind('=') + 1] + str(index)
                 # 웹툰 각 화 들어갈 때
-                crawl_naver_webtoon(target_url, day_of_the_week)
+                #crawl_naver_webtoon(target_url, day_of_the_week)
 
 def crawl_naver_webtoon(episode_url, day_of_the_week):
     html = requests.get(episode_url).text
@@ -133,6 +136,6 @@ if __name__ == '__main__':
 
     #pool = Pool(processes=4) # 4개의 프로세스를 사용합니다.
     #pool.map(getURL, range(10)) # pool에 일을 던져줍니다.
-    readyDB()
+    #readyDB()
     getURL()
-    closeDB()
+    #closeDB()
