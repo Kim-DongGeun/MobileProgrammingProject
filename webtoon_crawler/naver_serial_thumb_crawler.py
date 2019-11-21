@@ -6,12 +6,22 @@ from bs4 import BeautifulSoup
 from IPython.display import Image
 from PIL import Image as PILImage
 from multiprocessing import Pool
+import requests
 
 import mysql.connector
 from mysql.connector import Error
 
 connection = None
 cursor = None
+
+from selenium import webdriver
+
+driver = webdriver.Chrome('./chromedriver')
+driver.get('https://nid.naver.com/nidlogin.login')
+driver.implicitly_wait(3)
+driver.find_element_by_name('id').send_keys('gther2486')
+driver.find_element_by_name('pw').send_keys('@skehwlwhs159')
+driver.find_element_by_xpath('//*[@id="frmNIDLogin"]/fieldset/input').click()
 
 def readyDB():
     global connection
@@ -62,14 +72,14 @@ def getURL():
             # 최신화가 몇화인지
             recnetly_num = (int)(recently_url[recently_url.rfind('=') + 1:])
             
-            crawl_naver_webtoon(recently_url, thumb_data_url)
+            crawl_naver_webtoon(recently_url, thumb_data_url, day_of_the_week)
 
             #for index in range(recnetly_num, 1, -1):
             #    target_url = recently_url[:recently_url.rfind('=') + 1] + str(index)
                 # 웹툰 각 화 들어갈 때
             #    crawl_naver_webtoon(target_url, day_of_the_week, thumb_data_url)
 
-def crawl_naver_webtoon(episode_url, thumb_data_url):
+def crawl_naver_webtoon(episode_url, thumb_data_url, week):
     html = requests.get(episode_url).text
     soup = BeautifulSoup(html, 'html.parser')
 
@@ -78,8 +88,10 @@ def crawl_naver_webtoon(episode_url, thumb_data_url):
 
     # 작가 추출
     author_name = soup.select('span.wrt_nm')[0].text.strip()
+    print(author_name)
     # 웹툰 제목 추출
     comic_title = str(soup.select('.comicinfo h2')[0].contents[0])
+    print(comic_title)
     # 에피소드 제목 추출
     ep_title = soup.select('.tit_area h3')[0].text
 
@@ -89,20 +101,20 @@ def crawl_naver_webtoon(episode_url, thumb_data_url):
         # 이미지 추출
         #image_file_data = requests.get(image_file_url, headers=headers).content
         # db에 저장
-    insertdb(comic_title, ep_title, author_name, thumb_data_url)
+    insertdb(comic_title, ep_title, author_name, thumb_data_url, week)
 
         # 파일로 저장
         #open(image_file_path, 'wb').write(image_file_data)
 
     print('Completed !')
 
-def insertdb(title, semi_title, author, image_data):
+def insertdb(title, semi_title, author, image_data, week):
     try: 
         sql_insert_blob_query = """ INSERT INTO naver_serial_webtoon_thumb
-                            (title, semi_title, author, image) VALUES (%s,%s,%s,%s)"""
+                            (title, semi_title, author, image, week) VALUES (%s,%s,%s,%s,%s)"""
 
         # Convert data into tuple format
-        insert_blob_tuple = (title, semi_title, author, image_data)
+        insert_blob_tuple = (title, semi_title, author, image_data, week)
         result = cursor.execute(sql_insert_blob_query, insert_blob_tuple)
         connection.commit()
         #print("Image and file inserted successfully as a BLOB into python_employee table", result)
