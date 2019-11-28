@@ -85,6 +85,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/gray"
+                android:id="@+id/label_mon"
                 android:text="월"/>
 
             <TextView
@@ -95,6 +96,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/gray"
+                android:id="@+id/label_tue"
                 android:text="화"/>
 
             <TextView
@@ -105,6 +107,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/gray"
+                android:id="@+id/label_wed"
                 android:text="수"/>
 
             <TextView
@@ -115,6 +118,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/gray"
+                android:id="@+id/label_thu"
                 android:text="목"/>
 
             <TextView
@@ -125,6 +129,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/gray"
+                android:id="@+id/label_fri"
                 android:text="금"/>
 
             <TextView
@@ -135,6 +140,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/gray"
+                android:id="@+id/label_sat"
                 android:text="토"/>
 
             <TextView
@@ -145,6 +151,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/gray"
+                android:id="@+id/label_sun"
                 android:text="일"/>
             <TextView
                 android:layout_width="match_parent"
@@ -154,6 +161,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/gray"
+                android:id="@+id/label_total"
                 android:text="전체"/>
 
 

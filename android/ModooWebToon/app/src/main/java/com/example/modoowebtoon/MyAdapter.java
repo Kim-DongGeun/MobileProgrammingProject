@@ -73,6 +73,7 @@ class MyData{
     String author;
     Bitmap image;
 
+
     public MyData(String title, String semi_title, String author, Bitmap image) {
         this.title = title;
         this.semi_title = semi_title;

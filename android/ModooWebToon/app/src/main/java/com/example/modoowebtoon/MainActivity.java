@@ -11,6 +11,8 @@ import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,15 +25,25 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
-    private static String IP_ADDRESS = "15.164.149.226";
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    private static String IP_ADDRESS = "192.168.56.1";
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<MyData> myDataset;
     private String mJsonString;
     private Bitmap thumb_bitmap; // 썸네일 이미지
+    private String current_week;
+    private TextView textView_mon;
+    private TextView textView_tue;
+    private TextView textView_wed;
+    private TextView textView_thu;
+    private TextView textView_fri;
+    private TextView textView_sat;
+    private TextView textView_sun;
+
 
 
     @Override
@@ -40,11 +52,73 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initData();
-
-
     }
 
+    @Override
+    public void onClick(View view) {
+        GetData task = new GetData();
+        switch (view.getId()){
+            case R.id.label_mon:
+                changTextColor(current_week);
+                textView_mon.setTextColor(getResources().getColor(R.color.black));
+                task.execute("http://" + IP_ADDRESS + "/mon_getjson.php", "");
+                break;
+            case R.id.label_tue:
+                changTextColor(current_week);
+                textView_tue.setTextColor(getResources().getColor(R.color.black));
+                task.execute("http://" + IP_ADDRESS + "/tue_getjson.php", "");
+                break;
+            case R.id.label_wed:
+                changTextColor(current_week);
+                textView_wed.setTextColor(getResources().getColor(R.color.black));
+                task.execute("http://" + IP_ADDRESS + "/wed_getjson.php", "");
+                break;
+            case R.id.label_thu:
+                changTextColor(current_week);
+                textView_thu.setTextColor(getResources().getColor(R.color.black));
+                task.execute("http://" + IP_ADDRESS + "/thu_getjson.php", "");
+                break;
+            case R.id.label_fri:
+                changTextColor(current_week);
+                textView_fri.setTextColor(getResources().getColor(R.color.black));
+                task.execute("http://" + IP_ADDRESS + "/fri_getjson.php", "");
+                break;
+            case R.id.label_sat:
+                changTextColor(current_week);
+                textView_sat.setTextColor(getResources().getColor(R.color.black));
+                task.execute("http://" + IP_ADDRESS + "/sat_getjson.php", "");
+                break;
+            case R.id.label_sun:
+                changTextColor(current_week);
+                textView_sun.setTextColor(getResources().getColor(R.color.black));
+                task.execute("http://" + IP_ADDRESS + "/sun_getjson.php", "");
+                break;
+        }
+    }
+    private void changTextColor(String week){
+        if(!week.equals("mon"))
+            textView_mon.setTextColor(getResources().getColor(R.color.gray));
+        if(!week.equals("tue"))
+            textView_tue.setTextColor(getResources().getColor(R.color.gray));
+        if(!week.equals("wed"))
+            textView_wed.setTextColor(getResources().getColor(R.color.gray));
+        if(!week.equals("thu"))
+            textView_thu.setTextColor(getResources().getColor(R.color.gray));
+        if(!week.equals("fri"))
+            textView_fri.setTextColor(getResources().getColor(R.color.gray));
+        if(!week.equals("sat"))
+            textView_sat.setTextColor(getResources().getColor(R.color.gray));
+        if(!week.equals("sun"))
+            textView_sun.setTextColor(getResources().getColor(R.color.gray));
+    }
     private void initData(){
+        textView_mon = (TextView)findViewById(R.id.label_mon);
+        textView_tue = (TextView)findViewById(R.id.label_tue);
+        textView_wed = (TextView)findViewById(R.id.label_wed);
+        textView_thu = (TextView)findViewById(R.id.label_thu);
+        textView_fri = (TextView)findViewById(R.id.label_fri);
+        textView_sat = (TextView)findViewById(R.id.label_sat);
+        textView_sun = (TextView)findViewById(R.id.label_sun);
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
         // use this setting to improve performance if you know that changes
@@ -65,7 +139,46 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
 
         GetData task = new GetData();
-        task.execute( "http://" + IP_ADDRESS + "/getjson.php", "");
+        task.execute( "http://" + IP_ADDRESS + "/" + getDayOfWeek() + "_getjson.php", "");
+    }
+
+    private String getDayOfWeek(){
+        Calendar cal = Calendar.getInstance();
+        String strWeek = "";
+
+        int nWeek = cal.get(Calendar.DAY_OF_WEEK);
+        switch (nWeek){
+            case 0:
+                strWeek = "mon";
+                textView_mon.setTextColor(getResources().getColor(R.color.black));
+                break;
+            case 1:
+                strWeek = "tue";
+                textView_tue.setTextColor(getResources().getColor(R.color.black));
+                break;
+            case 2:
+                strWeek = "wed";
+                textView_wed.setTextColor(getResources().getColor(R.color.black));
+                break;
+            case 3:
+                strWeek = "thu";
+                textView_thu.setTextColor(getResources().getColor(R.color.black));
+                break;
+            case 4:
+                strWeek = "fri";
+                textView_fri.setTextColor(getResources().getColor(R.color.black));
+                break;
+            case 5:
+                strWeek = "sat";
+                textView_sat.setTextColor(getResources().getColor(R.color.black));
+                break;
+            case 6:
+                strWeek = "sun";
+                textView_sun.setTextColor(getResources().getColor(R.color.black));
+                break;
+        }
+        current_week = strWeek;
+        return strWeek;
     }
 
     private class GetData extends AsyncTask<String, Void, String> {
@@ -205,29 +318,4 @@ public class MainActivity extends AppCompatActivity {
             Log.d("main", "showResult : ", e);
         }
     }
-    // URL에서 image 다운
-    private Bitmap getBitmap(String url) {
-        URL imgUrl = null;
-        HttpURLConnection connection = null;
-        InputStream is = null;
-        Bitmap retBitmap = null;
-        try{
-            imgUrl = new URL(url);
-            connection = (HttpURLConnection)imgUrl.openConnection();
-            connection.setDoInput(true);//url로 input받는 flag 허용
-            connection.connect(); //연결
-            is = connection.getInputStream(); // get inputstream
-            retBitmap = BitmapFactory.decodeStream(is);
-        }catch(Exception e) {
-            e.printStackTrace();
-            return null;
-        }finally {
-            if(connection!=null) {
-                connection.disconnect();
-            }
-            return retBitmap;
-        }
-    }
-
-
 }
