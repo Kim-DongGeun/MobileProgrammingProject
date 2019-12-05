@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    private ArrayList<MyData> mDataset;
+    static private ArrayList<MyData> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -30,6 +30,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             mTitleView = (TextView)view.findViewById(R.id.title_view);
             mSemiTitleView = (TextView)view.findViewById(R.id.semi_title_view);
             mAuthorView = (TextView)view.findViewById(R.id.author_view);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition(); // 선택된 뷰 위치
+                    if(pos != RecyclerView.NO_POSITION){
+                        MyData getData = mDataset.get(pos);
+                        //클릭됐으면 제목 가져와서 웹툰 리스트 띄우기
+                    }
+                }
+            });
         }
     }
 

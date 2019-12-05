@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.nfc.Tag;
@@ -92,6 +93,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 changTextColor(current_week);
                 textView_sun.setTextColor(getResources().getColor(R.color.black));
                 task.execute("http://" + IP_ADDRESS + "/sun_getjson.php", "");
+                break;
+            case R.id.search_icon:
+                Intent intent = new Intent(this, Search_contents.class);
+                startActivity(intent);
                 break;
         }
     }
