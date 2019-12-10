@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,8 +13,11 @@ import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,8 +32,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    private static String IP_ADDRESS = "192.168.56.1";
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    static public String IP_ADDRESS = "115.23.130.126"; // server ip
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView textView_fri;
     private TextView textView_sat;
     private TextView textView_sun;
+    static public Context mContext;
 
 
 
@@ -60,46 +65,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         GetData task = new GetData();
         switch (view.getId()){
             case R.id.label_mon:
+                current_week = "mon";
                 changTextColor(current_week);
                 textView_mon.setTextColor(getResources().getColor(R.color.black));
                 task.execute("http://" + IP_ADDRESS + "/mon_getjson.php", "");
                 break;
             case R.id.label_tue:
+                current_week = "tue";
                 changTextColor(current_week);
                 textView_tue.setTextColor(getResources().getColor(R.color.black));
                 task.execute("http://" + IP_ADDRESS + "/tue_getjson.php", "");
                 break;
             case R.id.label_wed:
+                current_week = "wed";
                 changTextColor(current_week);
                 textView_wed.setTextColor(getResources().getColor(R.color.black));
                 task.execute("http://" + IP_ADDRESS + "/wed_getjson.php", "");
                 break;
             case R.id.label_thu:
+                current_week = "thu";
                 changTextColor(current_week);
                 textView_thu.setTextColor(getResources().getColor(R.color.black));
                 task.execute("http://" + IP_ADDRESS + "/thu_getjson.php", "");
                 break;
             case R.id.label_fri:
+                current_week = "fri";
                 changTextColor(current_week);
                 textView_fri.setTextColor(getResources().getColor(R.color.black));
                 task.execute("http://" + IP_ADDRESS + "/fri_getjson.php", "");
                 break;
             case R.id.label_sat:
+                current_week = "sat";
                 changTextColor(current_week);
                 textView_sat.setTextColor(getResources().getColor(R.color.black));
                 task.execute("http://" + IP_ADDRESS + "/sat_getjson.php", "");
                 break;
             case R.id.label_sun:
+                current_week = "sun";
                 changTextColor(current_week);
                 textView_sun.setTextColor(getResources().getColor(R.color.black));
                 task.execute("http://" + IP_ADDRESS + "/sun_getjson.php", "");
                 break;
+            case R.id.label_total:
+                changTextColor(current_week);
+                textView_sun.setTextColor(getResources().getColor(R.color.black));
             case R.id.search_icon:
                 Intent intent = new Intent(this, Search_contents.class);
                 startActivity(intent);
                 break;
         }
     }
+
     private void changTextColor(String week){
         if(!week.equals("mon"))
             textView_mon.setTextColor(getResources().getColor(R.color.gray));
@@ -117,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             textView_sun.setTextColor(getResources().getColor(R.color.gray));
     }
     private void initData(){
+        mContext = getApplicationContext();
         textView_mon = (TextView)findViewById(R.id.label_mon);
         textView_tue = (TextView)findViewById(R.id.label_tue);
         textView_wed = (TextView)findViewById(R.id.label_wed);
@@ -125,6 +142,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textView_sat = (TextView)findViewById(R.id.label_sat);
         textView_sun = (TextView)findViewById(R.id.label_sun);
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+
+        textView_mon.setOnClickListener(this);
+        textView_tue.setOnClickListener(this);
+        textView_wed.setOnClickListener(this);
+        textView_thu.setOnClickListener(this);
+        textView_fri.setOnClickListener(this);
+        textView_sat.setOnClickListener(this);
+        textView_sun.setOnClickListener(this);
+
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -137,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // specify an adapter (see also next example)
         myDataset = new ArrayList<>();
 
-        mAdapter = new MyAdapter(myDataset);
+        mAdapter = new MyAdapter(myDataset, getApplicationContext());
         mRecyclerView.setAdapter(mAdapter);
 
         myDataset.clear();
@@ -200,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            progressDialog.dismiss();
+
             if (result == null){
                 //mTextViewesult.setText(errorString);
             }
@@ -208,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mJsonString = result;
                 showResult();
             }
+            progressDialog.dismiss();
         }
 
         // DB에서 data 가져오기
@@ -267,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             JSONObject jsonObject = new JSONObject(mJsonString);
             Log.d("foweijf", mJsonString);
             JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+            myDataset.clear();
 
             for(int i=0;i<jsonArray.length();i++){
                 JSONObject item = jsonArray.getJSONObject(i);
