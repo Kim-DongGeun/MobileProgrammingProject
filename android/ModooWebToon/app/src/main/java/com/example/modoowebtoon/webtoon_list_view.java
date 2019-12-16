@@ -54,12 +54,14 @@ public class webtoon_list_view extends AppCompatActivity {
 
         inside_title.setText(intent.getStringExtra("title"));
         inside_author.setText(intent.getStringExtra("author"));
-        inside_image.setImageBitmap((Bitmap)intent.getParcelableExtra("image"));
+        inside_image.setImageBitmap((Bitmap)intent.getParcelableExtra("thumb"));
 
         inside_author = findViewById(R.id.author_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
+
+
         mRecyclerView = (RecyclerView)findViewById(R.id.list_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
@@ -70,14 +72,14 @@ public class webtoon_list_view extends AppCompatActivity {
         // specify an adapter (see also next example)
         myDataset = new ArrayList<>();
 
-        mAdapter = new ListAdapter(myDataset);
+        mAdapter = new ListAdapter(myDataset, getApplicationContext());
         mRecyclerView.setAdapter(mAdapter);
 
         myDataset.clear();
         mAdapter.notifyDataSetChanged();
 
         GetData task = new GetData();
-        task.execute( "http://" + MainActivity.IP_ADDRESS + "/list_getjson.php?title=" + intent.getStringExtra("title"), "");
+        task.execute( "http://" + MainActivity.IP_ADDRESS + "/list_getjson.php?title=" + intent.getStringExtra("title") + "&platform=" + MainActivity.currentPaltform, "");
     }
 
     private class GetData extends AsyncTask<String, Void, String> {

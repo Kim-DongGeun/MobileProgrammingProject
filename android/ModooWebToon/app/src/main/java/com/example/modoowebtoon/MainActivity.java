@@ -15,7 +15,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView textView_sat;
     private TextView textView_sun;
     static public Context mContext;
+    static public String currentPaltform;
 
 
 
@@ -68,43 +72,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 current_week = "mon";
                 changTextColor(current_week);
                 textView_mon.setTextColor(getResources().getColor(R.color.black));
-                task.execute("http://" + IP_ADDRESS + "/mon_getjson.php", "");
+                task.execute("http://" + IP_ADDRESS + "/mon_getjson.php?platform=" + currentPaltform, "");
                 break;
             case R.id.label_tue:
                 current_week = "tue";
                 changTextColor(current_week);
                 textView_tue.setTextColor(getResources().getColor(R.color.black));
-                task.execute("http://" + IP_ADDRESS + "/tue_getjson.php", "");
+                task.execute("http://" + IP_ADDRESS + "/tue_getjson.php?platform=" + currentPaltform, "");
                 break;
             case R.id.label_wed:
                 current_week = "wed";
                 changTextColor(current_week);
                 textView_wed.setTextColor(getResources().getColor(R.color.black));
-                task.execute("http://" + IP_ADDRESS + "/wed_getjson.php", "");
+                task.execute("http://" + IP_ADDRESS + "/wed_getjson.php?platform=" + currentPaltform, "");
                 break;
             case R.id.label_thu:
                 current_week = "thu";
                 changTextColor(current_week);
                 textView_thu.setTextColor(getResources().getColor(R.color.black));
-                task.execute("http://" + IP_ADDRESS + "/thu_getjson.php", "");
+                task.execute("http://" + IP_ADDRESS + "/thu_getjson.php?platform=" + currentPaltform, "");
                 break;
             case R.id.label_fri:
                 current_week = "fri";
                 changTextColor(current_week);
                 textView_fri.setTextColor(getResources().getColor(R.color.black));
-                task.execute("http://" + IP_ADDRESS + "/fri_getjson.php", "");
+                task.execute("http://" + IP_ADDRESS + "/fri_getjson.php?platform=" + currentPaltform, "");
                 break;
             case R.id.label_sat:
                 current_week = "sat";
                 changTextColor(current_week);
                 textView_sat.setTextColor(getResources().getColor(R.color.black));
-                task.execute("http://" + IP_ADDRESS + "/sat_getjson.php", "");
+                task.execute("http://" + IP_ADDRESS + "/sat_getjson.php?platform=" + currentPaltform, "");
                 break;
             case R.id.label_sun:
                 current_week = "sun";
                 changTextColor(current_week);
                 textView_sun.setTextColor(getResources().getColor(R.color.black));
-                task.execute("http://" + IP_ADDRESS + "/sun_getjson.php", "");
+                task.execute("http://" + IP_ADDRESS + "/sun_getjson.php?platform=" + currentPaltform, "");
                 break;
             case R.id.label_total:
                 changTextColor(current_week);
@@ -151,10 +155,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textView_sat.setOnClickListener(this);
         textView_sun.setOnClickListener(this);
 
+        // Spinner
+        Spinner spinner = (Spinner)findViewById(R.id.spinner_year);
+        spinner.setSelection(1);
+        ArrayAdapter sAdapter = ArrayAdapter.createFromResource(this, R.array.platform, android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(sAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                currentPaltform = adapterView.getItemAtPosition(i).toString();
+
+                mRecyclerView.setHasFixedSize(true);
+
+                // use a linear layout manager
+                mLayoutManager = new LinearLayoutManager(mContext);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+
+                // specify an adapter (see also next example)
+                myDataset = new ArrayList<>();
+
+                mAdapter = new MyAdapter(myDataset, getApplicationContext());
+                mRecyclerView.setAdapter(mAdapter);
+
+                myDataset.clear();
+                mAdapter.notifyDataSetChanged();
+
+                GetData task = new GetData();
+                task.execute( "http://" + IP_ADDRESS + "/" + getDayOfWeek() + "_getjson.php?platform=" + currentPaltform, "");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
+        /*mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
@@ -170,7 +211,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAdapter.notifyDataSetChanged();
 
         GetData task = new GetData();
-        task.execute( "http://" + IP_ADDRESS + "/" + getDayOfWeek() + "_getjson.php", "");
+        if(currentPaltform.equals("Naver")){
+            task.execute( "http://" + IP_ADDRESS + "/" + getDayOfWeek() + "_getjson.php", "");
+        }
+        else if(currentPaltform.equals("Daum")){
+            task.execute( "http://" + IP_ADDRESS + "/" + getDayOfWeek() + "_getjson.php", "");
+        }*/
+
     }
 
     private String getDayOfWeek(){
@@ -285,70 +332,136 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     //JSON OBJECT에서 데이터 추출
     private void showResult(){
-        String TAG_JSON="naver_serial_webtoon_thumb";
-        String TAG_TITLE = "title";
-        String TAG_SEMI_TITLE = "semi_title";
-        String TAG_AUTHOR ="author";
-        String TAG_IMAGE ="image";
-        try {
-            JSONObject jsonObject = new JSONObject(mJsonString);
-            Log.d("foweijf", mJsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
-            myDataset.clear();
+        if(currentPaltform.equals("Naver")){
+            String TAG_JSON="naver_serial_webtoon_thumb";
+            String TAG_TITLE = "title";
+            String TAG_SEMI_TITLE = "semi_title";
+            String TAG_AUTHOR ="author";
+            String TAG_IMAGE ="image";
+            try {
+                JSONObject jsonObject = new JSONObject(mJsonString);
+                Log.d("foweijf", mJsonString);
+                JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+                myDataset.clear();
 
-            for(int i=0;i<jsonArray.length();i++){
-                JSONObject item = jsonArray.getJSONObject(i);
+                for(int i=0;i<jsonArray.length();i++){
+                    JSONObject item = jsonArray.getJSONObject(i);
 
-                String title = item.getString(TAG_TITLE);
-                String semi_title = item.getString(TAG_SEMI_TITLE);
-                String author = item.getString(TAG_AUTHOR);
-                final String image = item.getString(TAG_IMAGE);
+                    String title = item.getString(TAG_TITLE);
+                    String semi_title = item.getString(TAG_SEMI_TITLE);
+                    String author = item.getString(TAG_AUTHOR);
+                    final String image = item.getString(TAG_IMAGE);
 
-                MyData Data = new MyData();
+                    MyData Data = new MyData();
 
-                Data.setTitle(title);
-                Data.setSemi_title(semi_title);
-                Data.setAuthor(author);
+                    Data.setTitle(title);
+                    Data.setSemi_title(semi_title);
+                    Data.setAuthor(author);
 
 
-                Thread mThread = new Thread(){
-                    @Override
-                    public void run() {
-                        URL imgUrl = null;
-                        HttpURLConnection connection = null;
-                        InputStream is = null;
-                        Bitmap retBitmap = null;
-                        try{
-                            imgUrl = new URL(image);
-                            connection = (HttpURLConnection)imgUrl.openConnection();
-                            connection.setDoInput(true);//url로 input받는 flag 허용
-                            connection.connect(); //연결
-                            is = connection.getInputStream(); // get inputstream
-                            retBitmap = BitmapFactory.decodeStream(is);
-                        }catch(Exception e) {
-                            e.printStackTrace();
-                        }finally {
-                            if(connection!=null) {
-                                connection.disconnect();
+                    Thread mThread = new Thread(){
+                        @Override
+                        public void run() {
+                            URL imgUrl = null;
+                            HttpURLConnection connection = null;
+                            InputStream is = null;
+                            Bitmap retBitmap = null;
+                            try{
+                                imgUrl = new URL(image);
+                                connection = (HttpURLConnection)imgUrl.openConnection();
+                                connection.setDoInput(true);//url로 input받는 flag 허용
+                                connection.connect(); //연결
+                                is = connection.getInputStream(); // get inputstream
+                                retBitmap = BitmapFactory.decodeStream(is);
+                            }catch(Exception e) {
+                                e.printStackTrace();
+                            }finally {
+                                if(connection!=null) {
+                                    connection.disconnect();
+                                }
+                                thumb_bitmap =  retBitmap;
                             }
-                            thumb_bitmap =  retBitmap;
                         }
+                    };
+                    mThread.start();
+
+                    try{
+                        mThread.join();
+                        Data.setImage(thumb_bitmap);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
                     }
-                };
-                mThread.start();
 
-                try{
-                    mThread.join();
-                    Data.setImage(thumb_bitmap);
-                }catch (InterruptedException e){
-                    e.printStackTrace();
+                    myDataset.add(Data);
+                    mAdapter.notifyDataSetChanged();
                 }
-
-                myDataset.add(Data);
-                mAdapter.notifyDataSetChanged();
+            } catch (JSONException e) {
+                Log.d("main", "showResult : ", e);
             }
-        } catch (JSONException e) {
-            Log.d("main", "showResult : ", e);
+        }
+        else{
+            String TAG_JSON="naver_serial_webtoon_thumb";
+            String TAG_TITLE = "title";
+            String TAG_AUTHOR ="author";
+            String TAG_IMAGE ="image";
+            try {
+                JSONObject jsonObject = new JSONObject(mJsonString);
+                Log.d("foweijf", mJsonString);
+                JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+                myDataset.clear();
+
+                for(int i=0;i<jsonArray.length();i++){
+                    JSONObject item = jsonArray.getJSONObject(i);
+
+                    String title = item.getString(TAG_TITLE);
+                    String author = item.getString(TAG_AUTHOR);
+                    final String image = item.getString(TAG_IMAGE);
+
+                    MyData Data = new MyData();
+
+                    Data.setTitle(title);
+                    Data.setAuthor(author);
+
+
+                    Thread mThread = new Thread(){
+                        @Override
+                        public void run() {
+                            URL imgUrl = null;
+                            HttpURLConnection connection = null;
+                            InputStream is = null;
+                            Bitmap retBitmap = null;
+                            try{
+                                imgUrl = new URL(image);
+                                connection = (HttpURLConnection)imgUrl.openConnection();
+                                connection.setDoInput(true);//url로 input받는 flag 허용
+                                connection.connect(); //연결
+                                is = connection.getInputStream(); // get inputstream
+                                retBitmap = BitmapFactory.decodeStream(is);
+                            }catch(Exception e) {
+                                e.printStackTrace();
+                            }finally {
+                                if(connection!=null) {
+                                    connection.disconnect();
+                                }
+                                thumb_bitmap =  retBitmap;
+                            }
+                        }
+                    };
+                    mThread.start();
+
+                    try{
+                        mThread.join();
+                        Data.setImage(thumb_bitmap);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+
+                    myDataset.add(Data);
+                    mAdapter.notifyDataSetChanged();
+                }
+            } catch (JSONException e) {
+                Log.d("main", "showResult : ", e);
+            }
         }
     }
 }

@@ -98,6 +98,13 @@ class MyData{
     String author;
     Bitmap image;
 
+    public MyData() {
+        this.title = "";
+        this.semi_title = "";
+        this.author = "";
+        this.image = null;
+    }
+
 
     public MyData(String title, String semi_title, String author, Bitmap image) {
         this.title = title;
@@ -106,7 +113,6 @@ class MyData{
         this.image = image;
     }
 
-    public MyData(){}
 
     public String getSemi_title() {
         return semi_title;

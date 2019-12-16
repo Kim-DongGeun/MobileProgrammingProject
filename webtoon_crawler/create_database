@@ -1,0 +1,26 @@
+create database my_db;
+
+use my_db;
+
+create table daum_webtoon_thumb(
+    id int auto_increment not null primary key,
+    title varchar(255) not null,
+    nickname varchar(255) not null,
+    weekend varchar(255) not null,
+    author varchar(255) not null,
+    thumb varchar(255) not null
+);
+
+create table daum_webtoon_inside(
+    id int auto_increment not null primary key,
+    title varchar(255) not null,
+    semi_title varchar(255) not null,
+    inside varchar(255) not null
+);
+
+create table daum_webtoon(
+    id int auto_increment not null primary key,
+    title varchar(255) not null,
+    semi_title varchar(255) not null,
+    image varchar(255) not null
+);

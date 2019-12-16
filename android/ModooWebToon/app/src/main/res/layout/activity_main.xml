@@ -72,6 +72,12 @@
             android:textStyle="bold"
             android:text="나만의웹툰"/>
 
+        <Spinner
+            android:id="@+id/spinner_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -95,6 +101,7 @@
                 android:textColor="@color/gray"
                 android:id="@+id/label_mon"
                 android:text="월"/>
+
 
             <TextView
                 android:clickable="true"
