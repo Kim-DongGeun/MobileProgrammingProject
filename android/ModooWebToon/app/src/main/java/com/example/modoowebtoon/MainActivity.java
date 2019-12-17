@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = ProgressDialog.show(MainActivity.this,
-                    "Please Wait", null, true, true);
+                    "불러오는 중...", null, true, true);
         }
         @Override
         protected void onPostExecute(String result) {

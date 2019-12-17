@@ -83,7 +83,7 @@ public class webtoon_view extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = ProgressDialog.show(webtoon_view.this,
-                    "Please Wait", null, true, true);
+                    "불러오는 중...", null, true, true);
         }
         @Override
         protected void onPostExecute(String result) {

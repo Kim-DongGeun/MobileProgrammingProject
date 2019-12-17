@@ -23,8 +23,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:scaleY="2"
-                    android:scaleX="2"
                     android:src="@drawable/ic_launcher_background"
                     android:id="@+id/inside_list_thumb_image"/>
                 <View
@@ -49,7 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
-                        android:textSize="10sp"
+                        android:textSize="15sp"
                         android:text="title"/>
                 </LinearLayout>
             </LinearLayout>
