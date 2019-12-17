@@ -1,0 +1,9 @@
+delete from daum_webtoon;
+delete from daum_webtoon_thumb;
+delete from daum_webtoon_inside;
+
+select count(id) from daum_webtoon;
+select count(id) from daum_webtoon_thumb;
+select count(id) from daum_webtoon_inside;
+
+
