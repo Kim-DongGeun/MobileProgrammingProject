@@ -1,1 +1,3 @@
-# MobileProgrammingProject
+# 웹툰 통합 어플
+
+네이버, 다음 웹툰을 한 곳에서 볼 수 있는 안드로이드 어플
